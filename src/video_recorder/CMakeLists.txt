@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(tracker)
+project(video_recorder)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -10,7 +10,6 @@ find_package(catkin REQUIRED COMPONENTS
     cv_bridge
     image_transport
     sensor_msgs
-    tf
 )
 
 # OpenCV
@@ -107,7 +106,7 @@ find_package(OpenCV)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES tracker
+#  LIBRARIES video_recorder
 #  CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
 )
@@ -116,58 +115,38 @@ catkin_package(
 ## Build ##
 ###########
 
-add_definitions(-std=c++11)
-#add_definitions(-g)
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
     ${catkin_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
-    src/libopentld/imacq
-    src/libopentld/mftracker
-    src/libopentld/tld
-    src/3rdparty/cvblobs
 )
 
 ## Declare a C++ library
-# add_library(tracker
-#   src/${PROJECT_NAME}/tracker.cpp
+# add_library(video_recorder
+#   src/${PROJECT_NAME}/video_recorder.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(tracker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-# Add subdirectories
-add_subdirectory(src/3rdparty/cvblobs)
-add_subdirectory(src/3rdparty/libconfig)
-add_subdirectory(src/libopentld)
-#add_subdirectory(src/opentld)
-
+# add_dependencies(video_recorder ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(tracker_node
-    src/tracker_node.cpp
-    src/tracker.cpp src/tracker.h
+add_executable(video_recorder_node
+    src/video_recorder_node.cpp
+    src/video_recorder.h src/video_recorder.cpp
 )
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(tracker_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(video_recorder_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(tracker_node
+target_link_libraries(video_recorder_node
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
-    libopentld
-    cvblobs
-    config++
 )
 
 #############
@@ -185,7 +164,7 @@ target_link_libraries(tracker_node
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS tracker tracker_node
+# install(TARGETS video_recorder video_recorder_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -210,7 +189,7 @@ target_link_libraries(tracker_node
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_tracker.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_video_recorder.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

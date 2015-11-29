@@ -1,2 +1,6 @@
 build
 devel
+.catkin_workspace
+nohup.out
+*.user
+*~

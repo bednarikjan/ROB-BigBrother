@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>          
+  <arg name="input" default="input.bag" />
+  
+  <param name="width" value="1280" />
+  <param name="height" value="720" />
+  
+  <node name="tracker" pkg="tracker" type="tracker_node"/>
+  
+  <node name="player" pkg="rosbag" type="play" args="-l -r 0.1 $(arg input)" />
+</launch>
