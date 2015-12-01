@@ -1,11 +1,51 @@
 <?xml version="1.0"?>
 <launch>          
-  <arg name="input" default="input.bag" />
-  
-  <param name="width" value="1280" />
-  <param name="height" value="720" />
-  
-  <node name="tracker" pkg="tracker" type="tracker_node"/>
-  
-  <node name="player" pkg="rosbag" type="play" args="-l -r 0.5 $(arg input)" />
+	<arg name="master_ns" default="master" />
+	<arg name="simulation" default="0" />
+	<arg name="input" default="input.bag" />
+	
+<!-- 	<param name="camera_units_count" value="$(arg camera_units_count)" /> -->
+    <param name="master_ns" value="master" />
+<!--     <param name="camera_unit_ns" value="$(arg camera_unit_ns)" /> -->
+    <param name="world_frame_id" value="world" />		
+	
+	<!-- Master -->
+	<group ns="$(arg master_ns)">
+		<!-- Joystick node -->
+		<node name="joystick" pkg="joy" type="joy_node" />
+		
+		<!-- Keyboard node -->
+		<node name="keyboard" pkg="keyboard" type="keyboard" />
+	</group>
+	
+	<group ns="tracker">	  
+		<arg name="unit_idx" value="1" />
+		
+		<param name="tf_prefix" value="tf_camera_unit_$(arg unit_idx)" />
+		<param name="unit_idx" value="$(arg unit_idx)" type="str" />		
+		<param name="serial_if" value="/dev/ttyUSB0" type="string" />
+		
+		<!-- Manipulator model -->
+		<param name="robot_description" command="$(find xacro)/xacro.py '$(find manipulator)/urdf/manipulator_flir_ptu-d46-70.xacro'" />
+        
+        <!-- Publisher of transformation of each frame of the manipulator model kinematic chain -->        
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+		
+		<!-- Manipulator -->
+		
+		<node name="manipulator" pkg="manipulator" type="manipulator_node" args="ptud4670">
+			<remap from="/$(arg master_ns)/keyboard/keydown_$(arg unit_idx)" to="/master/keyboard/keydown" />
+			<remap from="/$(arg master_ns)/keyboard/keyup_$(arg unit_idx)" to="/master/keyboard/keyup" />
+			<remap from="/$(arg master_ns)/joy_$(arg unit_idx)" to="/master/joy" />			
+		</node>		
+		
+		<!-- Tracker -->
+		<node name="tracker" pkg="tracker" type="tracker_node"/>
+	
+		<!-- Camera control node from avt_vimba_camera package -->
+		<include file="$(find camera)/launch/camera_unit_1.launch" unless="$(arg simulation)" />		
+		
+		<!-- ROS .bag playback -->
+		<node name="player" pkg="rosbag" type="play" args="-l -r 0.1 $(arg input)" if="$(arg simulation)" />			
+	</group>
 </launch>

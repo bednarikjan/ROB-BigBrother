@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
     image_transport
     sensor_msgs
     tf
+    msgs
 )
 
 # OpenCV
@@ -155,6 +156,7 @@ add_subdirectory(src/libopentld)
 add_executable(tracker_node
     src/tracker_node.cpp
     src/tracker.cpp src/tracker.h
+    src/crosshair.h src/crosshair.cpp
 )
 
 ## Add cmake target dependencies of the executable
