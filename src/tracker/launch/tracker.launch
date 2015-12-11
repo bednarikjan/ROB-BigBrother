@@ -31,8 +31,7 @@
         <!-- Publisher of transformation of each frame of the manipulator model kinematic chain -->        
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 		
-		<!-- Manipulator -->
-		
+		<!-- Manipulator -->		
 		<node name="manipulator" pkg="manipulator" type="manipulator_node" args="ptud4670">
 			<remap from="/$(arg master_ns)/keyboard/keydown_$(arg unit_idx)" to="/master/keyboard/keydown" />
 			<remap from="/$(arg master_ns)/keyboard/keyup_$(arg unit_idx)" to="/master/keyboard/keyup" />
@@ -43,7 +42,7 @@
 		<node name="tracker" pkg="tracker" type="tracker_node"/>
 	
 		<!-- Camera control node from avt_vimba_camera package -->
-		<include file="$(find camera)/launch/camera_unit_1.launch" unless="$(arg simulation)" />		
+		<include file="$(find camera)/launch/camera_unit_gs_0.launch" unless="$(arg simulation)" />		
 		
 		<!-- ROS .bag playback -->
 		<node name="player" pkg="rosbag" type="play" args="-l -r 0.1 $(arg input)" if="$(arg simulation)" />			

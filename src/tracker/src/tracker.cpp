@@ -130,7 +130,8 @@ void Tracker::onImage(const sensor_msgs::Image::ConstPtr img)
 {
     try {
         cv::Mat f = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::BGR8)->image;
-        cv::resize(f, frame_, cv::Size(640, 480));
+//        cv::resize(f, frame_, cv::Size(640, 480));
+        cv::resize(f, frame_, cv::Size(960, 540));
         receivedNewFrame_ = true;
     } catch (cv_bridge::Exception& e) {
         ROS_ERROR("cv_bridge exception: %s", e.what());
@@ -201,8 +202,8 @@ void Tracker::onJoy(const sensor_msgs::Joy::ConstPtr& joy)
         switch(state_){
             case INITIALIZATION:
                 // Update boudning box size
-                dwBB_ = (int)(-joy->axes[2] * 5.0);
-                dhBB_ = (int)( joy->axes[3] * 5.0);
+                dwBB_ = (int)(-joy->axes[2] * 2.0);
+                dhBB_ = (int)( joy->axes[3] * 2.0);
                 break;
 
             case TRACKING:
